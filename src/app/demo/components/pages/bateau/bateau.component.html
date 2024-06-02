@@ -1,0 +1,174 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Ajouter" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+                        <button pButton pRipple label="Supprimer" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedBateau()" [disabled]="!selectedBateau || !selectedBateau.length"></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload> -->
+                    <button pButton pRipple label="Exporter" icon="pi pi-upload" class="p-button-help" (click)="dt.exportCSV()"></button>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt [value]="bateaux" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['nom','matricule','specialite','portDetache']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedBateau" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Gestion des bateaux</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="nom">Nom <p-sortIcon field="nom"></p-sortIcon></th>
+                        <th pSortableColumn="matricule">Matricule <p-sortIcon field="matricule"></p-sortIcon></th>
+                        <th pSortableColumn="specialite">Specialité <p-sortIcon field="specialite"></p-sortIcon></th>
+                        <th pSortableColumn="portDetache">Port détache <p-sortIcon field="portDetache"></p-sortIcon></th>
+                        <th pSortableColumn="couleur">Couleur <p-sortIcon field="couleur"></p-sortIcon></th>
+                        <th pSortableColumn="etat">Etat <p-sortIcon field="etat"></p-sortIcon></th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-bateau>
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="bateau"></p-tableCheckbox>
+                        </td>
+
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Nom</span>
+                            {{bateau.nom}}
+                        </td>
+                        <td style="width:14%; min-width:8rem;">
+                            <span class="p-column-title">Matricule</span>
+                            {{bateau.matricule}}
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Specialité</span>
+                            {{bateau.specialite}}
+                        </td>
+                        <td style="width:14%; min-width: 10rem;"><span class="p-column-title">Port détache</span>
+                            {{bateau.portDetache}}
+                        </td>
+                        <td style="width:14%; min-width: 10rem;"><span class="p-column-title">Couleur</span>
+                            <!-- <span [class]="'product-badge status-' + (product.inventoryStatus ? product.inventoryStatus.toLowerCase() : '')">{{product.inventoryStatus}}</span>
+                             -->
+                             {{bateau.couleur}}
+                        </td>
+                        <td style="width:14%; min-width: 10rem;"><span class="p-column-title">Etat</span>
+                            <!-- <span [class]="'product-badge status-' + (product.inventoryStatus ? product.inventoryStatus.toLowerCase() : '')">{{product.inventoryStatus}}</span>
+                             -->
+                             {{bateau.etat}}
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editBateau(bateau)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteBateau(bateau)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog [(visible)]="bateauDialog" [style]="{width: '450px'}" header="Ajout de bateau" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+
+                <div class="field">
+                    <label for="nom">Nom</label>
+                    <input type="text" pInputText id="nom" [(ngModel)]="bateau.nom" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !bateau.nom}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !bateau.nom">Le champs nom est requis</small>
+                </div>
+                <div class="field">
+                    <label for="matricule">matricule</label>
+                    <input type="text" pInputText id="matricule" [(ngModel)]="bateau.matricule" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !bateau.matricule}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !bateau.matricule">Le champs matricule est requis</small>
+                </div>
+                <div class="field">
+                    <label for="nationalite">Nationalite</label>
+                    <input type="text" pInputText id="nationalite" [(ngModel)]="bateau.nationalite" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !bateau.nationalite}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !bateau.nationalite">Le champs nationalite est requis</small>
+                </div>
+                <div class="field">
+                    <label for="specialite">Specialite</label>
+                    <input type="text" pInputText id="nationalite" [(ngModel)]="bateau.specialite" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !bateau.specialite}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !bateau.specialite">Le champs specialite est requis</small>
+                </div>
+                <div class="field">
+                    <label for="portDetache">PortDetache</label>
+                    <input type="text" pInputText id="portDetache" [(ngModel)]="bateau.portDetache" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !bateau.portDetache}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !bateau.portDetache">Le champs portDetache est requis</small>
+                </div>
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <label for="longueur">Longueur</label>
+                        <p-inputNumber id="longueur" [(ngModel)]="bateau.longueur"></p-inputNumber>
+                    </div>
+                    <div class="field col">
+                        <label for="tirantEau">TirantEau</label>
+                        <p-inputNumber id="tirantEau" [(ngModel)]="bateau.tirantEau"></p-inputNumber>
+                    </div>
+                </div>
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <label for="tonnage">Tonnage</label>
+                        <p-inputNumber id="tonnage" [(ngModel)]="bateau.tonnage"></p-inputNumber>
+                    </div>
+                    <div class="field col">
+                        <label for="puissance">Puissance</label>
+                        <p-inputNumber id="puissance" [(ngModel)]="bateau.puissance"></p-inputNumber>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="moteur">Moteur</label>
+                    <input type="text" pInputText id="moteur" [(ngModel)]="bateau.moteur" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !bateau.moteur}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !bateau.moteur">Le champs moteur est requis</small>
+                </div>
+                <div class="field">
+                    <label for="couleur">Couleur</label>
+                    <input type="text" pInputText id="couleur" [(ngModel)]="bateau.couleur" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !bateau.couleur}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !bateau.couleur">Le champs couleur est requis</small>
+                </div>
+
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveBateau()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deletebateauDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="bateau">Voulez vous supprimer le bateau ayant la matricule <b>{{bateau.matricule}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Non" (click)="deletebateauDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Oui" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="listDeletebateauDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span>Voulez vous supprimer les bateau?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Non" (click)="deletebateauDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Oui" (click)="confirmDeleteSelected()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

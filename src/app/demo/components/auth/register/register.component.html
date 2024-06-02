@@ -1,0 +1,60 @@
+<div class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
+    <div class="flex flex-column align-items-center justify-content-center">
+        <div class="col-10">
+            <div class="card">
+                <h5>Demande d'inscription</h5>
+                <form [formGroup]="loginForm">
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field col-12 md:col-6">
+                        <label htmlFor="prenom">Prénom</label>
+                        <input pInputText formControlName="prenom" type="text" />
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <label htmlFor="nom">Nom</label>
+                        <input pInputText formControlName="nom" type="text" />
+                    </div>
+                    <div class="field col-12">
+                        <label htmlFor="addresse">Adresse</label>
+                        <input pInputTextarea formControlName="addresse" rows="4" />
+                    </div>
+
+                    <div class="field col-12 md:col-12">
+                        <label htmlFor="email">Email</label>
+                        <input pInputText formControlName="email" type="text" />
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <label htmlFor="cin">Cin</label>
+                        <p-inputNumber
+                        formControlName="cin"
+                        placeholder="xxxxxxxx"
+                        [maxlength]=8
+                    ></p-inputNumber>
+                    </div>
+                    <div class="field col-6">
+                        <label htmlFor="telephone">Téléphone</label>
+                        <p-inputNumber
+                        formControlName="telephone"
+                        placeholder="xxxxxxxx"
+                        [maxlength]=8
+                    ></p-inputNumber>
+                    </div>
+                    <div class="field col-12 md:col-4">
+                        <label htmlFor="dateNaissance">Date de Naissance</label>
+                        <input pInputText type="date" formControlName="dateNaissance"  />
+                    </div>
+                    <div class="field col-12 md:col-4">
+                        <label htmlFor="nationalite">Nationalite</label>
+                        <input pInputTextarea formControlName="nationalite" rows="4" />
+                    </div>
+                    <div class="field col-12 md:col-4">
+                        <label htmlFor="role">State</label>
+                        <p-dropdown formControlName="role" [options]="dropdownItems" optionLabel="name" [(ngModel)]="selectedState"></p-dropdown>
+                    </div>
+
+                </div>
+                </form>
+            </div>
+            <p-button label="Valider" [loading]="loading[3]" (onClick)="load(3)" style="float: right;"></p-button>
+        </div>
+</div>
+</div>

@@ -1,0 +1,177 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Ajouter" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+                        <button pButton pRipple label="Supprimer" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedEquipage()" [disabled]="!selectedEquipage || !selectedEquipage.length"></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload> -->
+                    <button pButton pRipple label="Exporter" icon="pi pi-upload" class="p-button-help" (click)="dt.exportCSV()"></button>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt [value]="equipages" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['cin','passport','prenom','nom','poste','status']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedEquipage" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Gestion de l'équipage</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="cin">Cin <p-sortIcon field="cin"></p-sortIcon></th>
+                        <th pSortableColumn="passport">Passport<p-sortIcon field="passport"></p-sortIcon></th>
+                        <th pSortableColumn="prenom">Prénom <p-sortIcon field="prenom"></p-sortIcon></th>
+                        <th pSortableColumn="nom">Nom<p-sortIcon field="nom"></p-sortIcon></th>
+                        <th pSortableColumn="poste">Poste <p-sortIcon field="poste"></p-sortIcon></th>
+                        <th pSortableColumn="status">Statut <p-sortIcon field="status"></p-sortIcon></th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-equipage>
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="equipage"></p-tableCheckbox>
+                        </td>
+
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Cin</span>
+                            {{equipage.cin}}
+                        </td>
+                        <td style="width:14%; min-width:8rem;">
+                            <span class="p-column-title">Passport</span>
+                            {{equipage.passport}}
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Prénom</span>
+                            {{equipage.prenom}}
+                        </td>
+                        <td style="width:14%; min-width: 10rem;"><span class="p-column-title">Nom</span>
+                            {{equipage.nom}}
+                        </td>
+                        <td style="width:14%; min-width: 10rem;"><span class="p-column-title">Poste</span>
+                            <!-- <span [class]="'product-badge status-' + (product.inventoryStatus ? product.inventoryStatus.toLowerCase() : '')">{{product.inventoryStatus}}</span>
+                             -->
+                             {{equipage.poste}}
+                        </td>
+                        <td style="width:14%; min-width: 10rem;"><span class="p-column-title"></span>
+                            <!-- <span [class]="'product-badge status-' + (product.inventoryStatus ? product.inventoryStatus.toLowerCase() : '')">{{product.inventoryStatus}}</span>
+                             -->
+                             {{equipage.status}}
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editEquipage(equipage)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteEquipage(equipage)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog [(visible)]="equipageDialog" [style]="{width: '450px'}" header="Ajout d'un équipage" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+
+                <div class="field">
+                    <label for="cin">Cin</label>
+                    <input type="text" pInputText id="cin" [(ngModel)]="equipage.cin" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !equipage.cin}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !equipage.cin">Le champs cin est requis</small>
+                </div>
+                <div class="field">
+                    <label for="passport">Passport</label>
+                    <input type="text" pInputText id="matricule" [(ngModel)]="equipage.passport" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !equipage.passport}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !equipage.passport">Le champs matricule est requis</small>
+                </div>
+                <div class="field">
+                    <label for="prenom">Prénom</label>
+                    <input type="text" pInputText id="prenom" [(ngModel)]="equipage.prenom" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !equipage.prenom}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !equipage.prenom">Le champs nationalite est requis</small>
+                </div>
+                <div class="field">
+                    <label for="nom">Nom</label>
+                    <input type="text" pInputText id="nationalite" [(ngModel)]="equipage.nom" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !equipage.nom}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !equipage.nom">Le champs specialite est requis</small>
+                </div>
+                <div class="field">
+                    <label for="idBateau">Bateau</label>
+                    <p-dropdown [(ngModel)]="equipage.idBateau" inputId="idBateau" optionValue="id" [options]="bateaux" placeholder="Select">
+                        <ng-template pTemplate="selectedItem">
+                            <span *ngIf="equipage && equipage.idBateau" [class]="'product-badge idBateau-' + equipage.idBateau">{{mapValueBateau(equipage.idBateau)}}</span>
+                        </ng-template>
+                        <ng-template let-option pTemplate="item">
+                            <span [class]="'product-badge idBateau-' + option.id" >{{option.nom}}</span>
+                        </ng-template>
+                    </p-dropdown>
+                </div>
+                <div class="field">
+                    <label for="poste">Poste</label>
+                    <p-dropdown [(ngModel)]="equipage.poste" inputId="poste" optionValue="label" [options]="postes" placeholder="Select">
+                        <ng-template pTemplate="selectedItem">
+                            <span *ngIf="equipage && equipage.poste" [class]="'product-badge poste-' + equipage.poste.toString().toLowerCase()">{{equipage.poste}}</span>
+                        </ng-template>
+                        <ng-template let-option pTemplate="item">
+                            <span [class]="'product-badge poste-' + option.value">{{option.label}}</span>
+                        </ng-template>
+                    </p-dropdown>
+                </div>
+                <div class="field">
+                    <label for="status">Statut</label>
+                    <p-dropdown [(ngModel)]="equipage.status" inputId="status" optionValue="label" [options]="statuses" placeholder="Select">
+                        <ng-template pTemplate="selectedItem">
+                            <span *ngIf="equipage && equipage.status" [class]="'product-badge status-' + equipage.status.toString().toLowerCase()">{{equipage.status}}</span>
+                        </ng-template>
+                        <ng-template let-option pTemplate="item">
+                            <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
+                        </ng-template>
+                    </p-dropdown>
+                </div>
+                <div class="field">
+                    <label for="nom">Nationalite</label>
+                    <input type="text" pInputText id="nationalite" [(ngModel)]="equipage.nationalite" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !equipage.nationalite}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !equipage.nationalite">Le champs nationalite est requis</small>
+                </div>
+
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveEquipage()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteEquipageDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="equipage">Voulez vous supprimer l'équippage ayant la matricule <b>{{equipage.cin}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Non" (click)="deleteEquipageDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Oui" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="listDeleteEquipageDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span>Voulez vous supprimer cet équipage?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Non" (click)="deleteEquipageDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Oui" (click)="confirmDeleteSelected()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

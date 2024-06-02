@@ -1,0 +1,160 @@
+<div class="grid">
+
+
+	<div class="col-12">
+		<div class="card">
+			<h5>List des avis d'appareillages</h5>
+			<p-toast></p-toast>
+			<p-table [value]="listAvis" dataKey="name" [expandedRowKeys]="expandedRows" responsiveLayout="scroll">
+				<ng-template pTemplate="caption">
+                    <button pButton pRipple label="Ajouter" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+					<button pButton icon="pi pi-fw {{isExpanded ? 'pi-minus' : 'pi-plus'}}" label="{{isExpanded ? 'Collapse All' : 'Expand All'}}" (click)="expandAll()"></button>
+					<div class="flex table-header">
+					</div>
+				</ng-template>
+				<ng-template pTemplate="header">
+					<tr>
+						<th style="width: 3rem"></th>
+						<th pSortableColumn="code">Code <p-sortIcon field="code"></p-sortIcon></th>
+						<th pSortableColumn="destination">Destination <p-sortIcon field="destination"></p-sortIcon></th>
+						<th pSortableColumn="dateEntree">Date entré <p-sortIcon field="dateEntree"></p-sortIcon></th>
+						<th pSortableColumn="dateSortie">Date sortie <p-sortIcon field="dateSortie"></p-sortIcon></th>
+						<th pSortableColumn="etat">Etat <p-sortIcon field="etat"></p-sortIcon></th>
+                        <th></th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-avis let-expanded="expanded">
+					<tr>
+						<td>
+							<button type="button" pButton pRipple [pRowToggler]="avis" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+						</td>
+						<td style="min-width: 12rem;">{{avis.code}}</td>
+
+						<td style="min-width: 8rem;">{{avis.destination}}</td>
+						<td style="min-width: 10rem;" >{{avis.dateEntree  | date: 'dd/MM/yyyy'}}</td>
+						<td style="min-width: 10rem;">{{avis.dateSortie  | date: 'dd/MM/yyyy'}}</td>
+                        <td style="min-width: 10rem;">{{avis.etat}}</td>
+                        <td>
+                            <div class="flex">
+                                <!-- <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editBateau(bateau)"></button> -->
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteAvis(avis)"></button>
+                            </div>
+                        </td>
+
+						<!-- <td><span [class]="'product-badge status-' + product.inventoryStatus.toLowerCase()">{{product.inventoryStatus}}</span></td> -->
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="rowexpansion" let-avis>
+					<tr>
+						<td colspan="7">
+							<div class="p-3">
+								<p-table [value]="avis.equipages" dataKey="id" responsiveLayout="scroll">
+									<ng-template pTemplate="header">
+					<tr>
+						<th pSortableColumn="cin">cin <p-sortIcon field="cin"></p-sortIcon></th>
+						<th pSortableColumn="prenom">Prenom <p-sortIcon field="prenom"></p-sortIcon></th>
+						<th pSortableColumn="nom">Nom <p-sortIcon field="nom"></p-sortIcon></th>
+						<th pSortableColumn="poste">Poste <p-sortIcon field="poste"></p-sortIcon></th>
+						<th pSortableColumn="nationalite">Nationalité <p-sortIcon field="nationalite"></p-sortIcon></th>
+						<!-- <th style="width: 4rem"></th> -->
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-equipage>
+					<tr>
+						<td>{{equipage.cin}}</td>
+						<td>{{equipage.prenom}}</td>
+						<td>{{equipage.nom}}</td>
+						<td>{{equipage.poste}}</td>
+						<td>{{equipage.nationalite}}</td>
+						<!-- <td><p-button type="button" icon="pi pi-search"></p-button></td> -->
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="6">Il y a pas d'équipage</td>
+					</tr>
+				</ng-template>
+			</p-table>
+		</div>
+		</td>
+		</tr>
+		</ng-template>
+		</p-table>
+	</div>
+	</div>
+
+
+</div>
+
+
+<p-dialog [(visible)]="avisDialog" [style]="{width: '450px'}" header="Ajout d'avis d'apareillage" [modal]="true" class="p-fluid">
+    <ng-template pTemplate="content">
+
+        <div class="field">
+            <label for="code">Code</label>
+            <input type="text" pInputText id="code" [(ngModel)]="avisApareillage.code" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !avisApareillage.code}"/>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !avisApareillage.code">Le champs code est requis</small>
+        </div>
+        <div class="field">
+            <label for="destination">Destination</label>
+            <input type="text" pInputText id="destination" [(ngModel)]="avisApareillage.destination" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !avisApareillage.destination}"/>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !avisApareillage.destination">Le champs matricule est requis</small>
+        </div>
+        <!-- <div class="field">
+            <label for="dateEntree">Date entrée</label>
+            <input type="date" pInputText id="dateEntree" [(ngModel)]="avisApareillage.dateEntree" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !avisApareillage.dateEntree}"/>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !avisApareillage.dateEntree">Le champs date entrée est requis</small>
+        </div> -->
+        <div class="field">
+            <label for="bateau">Bateau</label>
+            <p-dropdown
+                [options]="bateaux"
+                [(ngModel)]="selectedBateaux"
+                optionLabel="nom"
+                [filter]="true"
+                filterBy="nom"
+                [showClear]="true"
+                dataKey="id"
+                placeholder="Select bateau">
+                <!-- <ng-template pTemplate="selectedItem" let-selectedOption>
+                    <div class="flex align-items-center gap-2">
+                        <div>{{ selectedOption.nom }}</div>
+                    </div>
+                </ng-template> -->
+                <ng-template let-bateau pTemplate="item">
+                        <div>{{ bateau.nom }}</div>
+                </ng-template>
+            </p-dropdown>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !avisApareillage.etat">Le champs état est requis</small>
+        </div>
+        <div class="field">
+            <label for="dateSortie">Date sortie</label>
+            <input type="date" pInputText id="dateSortie" [(ngModel)]="avisApareillage.dateSortie" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !avisApareillage.dateSortie}"/>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !avisApareillage.dateSortie">Le champs date sortie est requis</small>
+        </div>
+
+        <!-- <div class="field">
+            <label for="etat">état</label>
+            <p-selectButton id="etat" [options]="stateOptions" [(ngModel)]="avisApareillage.etat" optionLabel="label" optionValue="value"></p-selectButton>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !avisApareillage.etat">Le champs état est requis</small>
+        </div> -->
+
+
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveAvis()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="deleteAvisDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+    <div class="flex align-items-center justify-content-center">
+        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+        <span *ngIf="avisApareillage">Voulez vous supprimer l'avis d'apareillage ayant le <b>{{avisApareillage.code}}</b> ?</span>
+    </div>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Non" (click)="deleteAvisDialog = false"></button>
+        <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Oui" (click)="confirmDelete()"></button>
+    </ng-template>
+</p-dialog>
