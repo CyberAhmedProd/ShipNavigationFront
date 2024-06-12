@@ -367,11 +367,11 @@ export class AppMenuComponent implements OnInit {
                             icon: 'pi pi-fw  pi-tablet',
                             routerLink: ['/pages/avis']
                         },
-                        {
-                            label: 'Equipage',
-                            icon: 'pi pi-fw  pi-user',
-                            routerLink: ['/pages/equipage']
-                        },
+                        // {
+                        //     label: 'Equipage',
+                        //     icon: 'pi pi-fw  pi-user',
+                        //     routerLink: ['/pages/equipage']
+                        // },
                         // {
                         //     label: 'Timeline',
                         //     icon: 'pi pi-fw pi-calendar',

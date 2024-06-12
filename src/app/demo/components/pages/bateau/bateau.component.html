@@ -113,21 +113,21 @@
                 <div class="formgrid grid">
                     <div class="field col">
                         <label for="longueur">Longueur</label>
-                        <p-inputNumber id="longueur" [(ngModel)]="bateau.longueur"></p-inputNumber>
+                        <p-inputNumber step="0.1" id="longueur" [(ngModel)]="bateau.longueur"></p-inputNumber>
                     </div>
                     <div class="field col">
                         <label for="tirantEau">TirantEau</label>
-                        <p-inputNumber id="tirantEau" [(ngModel)]="bateau.tirantEau"></p-inputNumber>
+                        <p-inputNumber step="0.1" id="tirantEau" [(ngModel)]="bateau.tirantEau"></p-inputNumber>
                     </div>
                 </div>
                 <div class="formgrid grid">
                     <div class="field col">
                         <label for="tonnage">Tonnage</label>
-                        <p-inputNumber id="tonnage" [(ngModel)]="bateau.tonnage"></p-inputNumber>
+                        <p-inputNumber step="0.1" id="tonnage" [(ngModel)]="bateau.tonnage"></p-inputNumber>
                     </div>
                     <div class="field col">
                         <label for="puissance">Puissance</label>
-                        <p-inputNumber id="puissance" [(ngModel)]="bateau.puissance"></p-inputNumber>
+                        <p-inputNumber step="0.1" id="puissance" [(ngModel)]="bateau.puissance"></p-inputNumber>
                     </div>
                 </div>
                 <div class="field">
@@ -166,7 +166,7 @@
                 <span>Voulez vous supprimer les bateau?</span>
             </div>
             <ng-template pTemplate="footer">
-                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Non" (click)="deletebateauDialog = false"></button>
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Non" (click)="listDeletebateauDialog = false"></button>
                 <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Oui" (click)="confirmDeleteSelected()"></button>
             </ng-template>
         </p-dialog>

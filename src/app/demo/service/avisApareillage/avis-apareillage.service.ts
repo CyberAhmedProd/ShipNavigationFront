@@ -20,6 +20,17 @@ export class AvisApareillageService {
         );
     }
 
+    ExecuteCountAvis(etat : any , IdProprietaire : any) {
+        return this.http.get<any>(this.apiPath + "/Count/Proprietaire/"+ IdProprietaire + "/Etat/" + etat).pipe(
+            tap((response) => {
+              if (response && response.data) {
+              }
+              else
+                console.error("no data");
+            }))
+        }
+
+
     ExecuteInsertAvis(avisApareillage : AvisApareillage) {
         return this.http.post<any>(this.apiPath,avisApareillage).pipe(
             tap((response) => {

@@ -10,7 +10,7 @@
                     </div>
                 </ng-template>
 
-                <ng-template pTemplate="right">
+                <ng-template pTemplate="right"> 
                     <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload> -->
                     <button pButton pRipple label="Exporter" icon="pi pi-upload" class="p-button-help" (click)="dt.exportCSV()"></button>
                 </ng-template>
@@ -169,7 +169,7 @@
                 <span>Voulez vous supprimer cet équipage?</span>
             </div>
             <ng-template pTemplate="footer">
-                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Non" (click)="deleteEquipageDialog = false"></button>
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Non" (click)="listDeleteEquipageDialog = false"></button>
                 <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Oui" (click)="confirmDeleteSelected()"></button>
             </ng-template>
         </p-dialog>

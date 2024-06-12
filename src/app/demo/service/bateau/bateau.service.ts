@@ -19,6 +19,16 @@ export class BateauService {
         })
       );
   }
+  ExecuteGetGetCountBateauByIdProprietaire(idProprietaire) {
+    return this.http.get<any>(this.apiPath + "/Count/Proprietaire/" + idProprietaire).pipe(
+        tap((response) => {
+          if (response && response.data) {
+          }
+          else
+            console.error("no data");
+        })
+      );
+  }
   ExecuteGetAllBateauExtraDataUser(idProprietaire) {
     return this.http.get<any>(`${this.apiPath}/All/extraDataUser/Proprietaire/${idProprietaire}`).pipe(
         tap((response) => {
